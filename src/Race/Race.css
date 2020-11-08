@@ -11,7 +11,37 @@
     overflow: hidden;
 }
 
-.Race .image {
+.Race.is-finished:before {
+    content: 'FINISH';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 150px;
+    font-family: eightBit;
+    z-index: 1;
+    color: white;
+    margin-top: -15px;
+    opacity: 0;
+    animation: race-finished-text 2s linear forwards;
+    animation-delay: 2s;
+    -webkit-text-stroke: 5px black;
+}
+
+.Race.is-finished:after {
+    position: absolute;
+    content: '';
+    background-image: url('./finish.png');
+    background-size: 130px;
+    background-position: center;
+    transform: rotate(90deg);
+    animation: finish 2s linear forwards;
+    width: 177px;
+    height: 20px;
+    top: 190px;
+}
+
+.Race .Race-image {
     background-image: url('./road.png');
     background-size: contain;
     position: absolute;
@@ -19,8 +49,12 @@
     top: 0;
     height: 100%;
     width: 200%;
-    animation: race 2s linear infinite;
+    animation: race-running 2s linear infinite;
     transform: translate3d(0, 0, 0);
+}
+
+.Race.is-finished .Race-image {
+    animation: race-finished 2s linear forwards;
 }
 
 .Kart {
@@ -30,6 +64,12 @@
     left: 50%;
     width: 100px;
     height: 100px;
+    z-index: 1;
+}
+
+.Race.is-finished .Kart {
+    animation: race-finished-kart 2s linear forwards;
+    animation-delay: 2s;
 }
 
 .Kart:nth-child(even) {
@@ -38,22 +78,49 @@
 
 .Kart:nth-child(odd) {
     top: 160px;
+    z-index: 1;
 }
 
-.Kart.is-solved .image {
+.Kart.is-solved .Kart-image {
     animation: is-solved 1s ease;
 }
 
-.Kart.is-failed .image {
+.Kart:after {
+    background-size: contain;
+    background-repeat: no-repeat;
+    content: '';
+    position: absolute;
+}
+
+.Kart.is-solved:after {
+    background-image: url('./explosion.gif');
+    width: 32px;
+    height: 32px;
+    bottom: 0;
+    left: -8px;
+}
+
+.Kart.is-failed:after {
+    background-image: url('./smoke.gif');
+    width: 128px;
+    height: 64px;
+    bottom: -20px;
+    left: 100%;
+    margin-left: -85px;
+}
+
+.Kart.is-failed .Kart-image {
     animation: is-failed 1s ease;
 }
 
-.Kart .image {
+
+.Kart .Kart-image {
     width: 100%;
     height: 100%;
     animation: engine .15s linear infinite;
     animation-direction: alternate;
     background-image: url('./kart.png');
+    background-size: contain;
 }
 
 .Kart .name {
@@ -67,23 +134,41 @@
     text-align: center;
 }
 
-@keyframes race {
-    100%  { transform: translateX(-50%); }
+@keyframes race-running {
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes race-finished {
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes race-finished-kart {
+    100% { left: 200%; }
+}
+
+@keyframes race-finished-text {
+    80% { opacity: 0; }
+    100% { opacity: 100%; }
 }
 
 @keyframes engine {
-    0%  { margin-top: -2px; }
-    100%  { margin-top: 0; }
+    0% { margin-top: -2px; }
+    100% { margin-top: 0; }
 }
 
 @keyframes is-solved {
-    20%  { transform: rotate(-15deg); }
-    80%  { transform: rotate(-15deg); }
-    100%  { transform: rotate(0deg); }
+    20% { transform: rotate(-15deg); }
+    80% { transform: rotate(-15deg); }
+    100% { transform: rotate(0deg); }
 }
 
 @keyframes is-failed {
-    20%  { transform: rotate(15deg); }
-    80%  { transform: rotate(15deg); }
-    100%  { transform: rotate(0deg); }
+    20% { transform: rotate(15deg); }
+    80% { transform: rotate(15deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes finish {
+    00% { left: 100%; }
+    100% { left: 0; }
 }

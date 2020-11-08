@@ -4,19 +4,21 @@ import './Race.css';
 function Race() {
 
     const currentPlayerId = '1';
-    const delta = 75;
+    const delta = 90;
 
     const [players, setPlayers] = useState([
         { id: '1', name: 'Peter', delta: 0 },
-        { id: '2', name: 'Foo', delta: -delta }
+        { id: '2', name: 'Foo', delta: -delta },
+        { id: '3', name: 'Bla', delta: -2 * delta }
     ]);
+    const [isFinished, setIsFinished] = useState(false);
 
     const playerSolved = playerId => {
         addPlayerChangeAnimation(playerId, 'solved');
         if (playerId === currentPlayerId) {
             updateOthers(-delta);
         } else {
-            updateOthers(delta);
+            updateOther(delta, playerId);
         }
     };
 
@@ -25,7 +27,7 @@ function Race() {
         if (playerId === currentPlayerId) {
             updateOthers(+delta);
         } else {
-            updateOthers(-delta);
+            updateOther(-delta, playerId);
         }
     };
 
@@ -51,10 +53,21 @@ function Race() {
         setPlayers(newPlayers);
     };
 
+    const updateOther = (delta, playerId) => {
+        const newPlayers = [...players];
+        const player = newPlayers.find(player => player.id === playerId);
+        player.delta += delta;
+        setPlayers(newPlayers);
+    };
+
+    const finish = () => {
+        setIsFinished(true);
+    };
+
     return (
         <>
-            <div className="Race">
-                <div className="image"></div>
+            <div className={`Race ${isFinished ? 'is-finished' : ''}`}>
+                <div className="Race-image" />
                 {
                     players.map((player, index) => (
                         <Kart key={index} player={player} index={index} />
@@ -74,12 +87,13 @@ function Race() {
                         </div>
                     ))
                 }
+                <button onClick={finish}>Finish</button>
             </div>
         </>
     );
 }
 
-const Kart = ({ player, index }) => (
+const Kart = ({ player }) => (
     <div
         className={[
             'Kart',
@@ -87,7 +101,7 @@ const Kart = ({ player, index }) => (
         ].join(' ')}
         style={{ marginLeft: `${player.delta}px` }}
     >
-        <div className="image" />
+        <div className="Kart-image" />
         <label className="name">{player.name}</label>
     </div>
 )
