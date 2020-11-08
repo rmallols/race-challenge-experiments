@@ -5,13 +5,16 @@ function Race() {
 
     const currentPlayerId = '1';
     const delta = 90;
+    const states = {
+        IDLE: 'idle', STARTING: 'starting', RUNNING: 'running', FINISHED: 'finished'
+    };
 
+    const [state, setState] = useState(states.IDLE);
     const [players, setPlayers] = useState([
         { id: '1', name: 'Peter', delta: 0 },
         { id: '2', name: 'Foo', delta: -delta },
         { id: '3', name: 'Bla', delta: -2 * delta }
     ]);
-    const [isFinished, setIsFinished] = useState(false);
 
     const playerSolved = playerId => {
         addPlayerChangeAnimation(playerId, 'solved');
@@ -60,13 +63,20 @@ function Race() {
         setPlayers(newPlayers);
     };
 
+    const start = () => {
+        setState(states.STARTING);
+        setTimeout(() => {
+            setState(states.RUNNING);
+        }, 3500);
+    };
+
     const finish = () => {
-        setIsFinished(true);
+        setState(states.FINISHED);
     };
 
     return (
         <>
-            <div className={`Race ${isFinished ? 'is-finished' : ''}`}>
+            <div className="Race" state={state}>
                 <div className="Race-image" />
                 {
                     players.map((player, index) => (
@@ -87,6 +97,7 @@ function Race() {
                         </div>
                     ))
                 }
+                <button onClick={start}>Start</button>
                 <button onClick={finish}>Finish</button>
             </div>
         </>
